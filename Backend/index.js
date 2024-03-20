@@ -5,15 +5,13 @@ import userRoute from "./Routes/user.js";
 import authRoute from "./Routes/Authentication.js";
 import roomsRoute from "./Routes/rooms.js";
 import hotelsRoute from "./Routes/hotels.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 // Connect to MongoDB for HotelManagment database
 mongoose
-  .connect("mongodb://localhost:27017/HotelManagment", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect("mongodb://localhost:27017/HotelManagment")
   .then(() => {
     console.log("Connected to MongoDB for HotelManagment");
   })
@@ -21,24 +19,12 @@ mongoose
     console.error("Error connecting to MongoDB for HotelManagment:", error);
   });
 
-// Connect to MongoDB for JobDataBase database
-// mongoose
-//   .connect("mongodb://localhost:27017/JobDataBase", {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//   .then(() => {
-//     console.log("Connected to MongoDB for JobDataBase");
-//   })
-//   .catch((error) => {
-//     console.error("Error connecting to MongoDB for JobDataBase:", error);
-//   });
-
+app.use(cookieParser);
 app.use(express.json());
 // Middleware
+app.use("/api/hotels", hotelsRoute);
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
-app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
 
 app.use((err, req, res, next) => {
